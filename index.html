@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ng-app="randomGodApp">
+<head>
+  <title>Smite: God Randomizer</title>
+  <!--<link rel="stylesheet" href="styles.css">-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Bungee|Jim+Nightshade|Metal+Mania|Pirata+One|UnifrakturMaguntia" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular-animate.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="js/app.js"></script>
+</head>
+
+<body class="background">
+<div ng-controller="RandomGodController" class="container foreground">
+  <div id="logo">
+    <a href="smitegame.com"><img src="images/smite-logo.png" alt="Smite"></img></a>
+      <hr>
+    <p class="bungee logo-text">Random God Generator</p>
+  </div>
+
+
+  <div id="randomizer">
+    <div class="god">
+      <div class="god-pic-holder">
+        <img ng-src="images/updated/{{getImage(chosen)}}" width="200" height="auto"></img>
+      </div>
+      <p class="god-name">{{chosen.Name}}</p>
+      <p class="god-title jimnightshade">{{chosen.Subtitle}}</p>
+    </div>
+    <div class="holder">
+      <button ng-click="randomize()" class="button">Randomize</button>
+    </div>
+    <hr>
+
+    <div class="holder less">
+
+    </div>
+
+    <div class="filter-holder holder less">
+      <button ng-click="showFilters = !showFilters" class="button small">Filters</button>
+      <div class="holder less row" ng-show="showFilters">
+        <div class="col-md-3"></div>
+        <div class="col-md-2 filter left">
+          <button ng-click="pantheonIsActive = !pantheonIsActive" class="button filter">Pantheon</button>
+          <div ng-show="pantheonIsActive" class="filter-group fadeable">
+            <button class="button sub-filter" ng-repeat="pantheon in pantheons.sort()" ng-click="toggleFilter('Pantheon', pantheon)" ng-class="isInFilter('Pantheon', pantheon) ? 'in' : 'out'">{{pantheon}}</button>
+          </div>
+        </div>
+
+        <div class="col-md-2 filter middle">
+          <button ng-click="powerTypeIsActive = !powerTypeIsActive" class="button filter">Power Type</button>
+          <div ng-show="powerTypeIsActive" class="filter-group fadeable">
+            <button class="button sub-filter"
+            ng-repeat="powerType in powerTypes.sort()"
+            ng-click="toggleFilter('Power_Type', powerType)"
+            ng-class="isInFilter(powerType) ? 'in' : 'out'"
+            >
+              {{powerType}}
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-2 filter right">
+            <button ng-click="classIsActive = !classIsActive" class="button filter">Class</button>
+            <div ng-show="classIsActive" class="filter-group fadeable">
+              <button class="button sub-filter" ng-repeat="class in godClasses.sort()">{{class}}
+              </button>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div ng-repeat="god in gods | filter:customFilter">{{god.Name}}</div>
+  </div>
+</div>
+</div>
+</body>
+</html>
