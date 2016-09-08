@@ -1,6 +1,6 @@
 randomGodApp = angular.module('randomGodApp', ['ngAnimate'])
 
-randomGodApp.controller('RandomGodController', ['$scope', '$sce', function($scope, $sce) {
+randomGodApp.controller('RandomGodController', ['$scope', '$sce', '$filter',function($scope, $sce, $filter) {
 
 $scope.showFilters = false;
   var init = function() {
@@ -13,49 +13,96 @@ $scope.showFilters = false;
     "Power_Type": []
   }
 
+  $scope.currentError = "none"
+  $scope.noGodsError = "There are no gods matching selected filters"
+  $scope.oneGodError = "There is only one god matching selected filters"
+
   $scope.toggleFilter = function(type, entry) {
-    location = $scope.filters[type].indexOf(entry)
+    loc = $scope.filters[type].indexOf(entry);
     //it's in there, so remove it
-    if(location > -1)
-      $scope.filters[type].splice(location, 1);
+    if(loc > -1) {
+      $scope.filters[type].splice(loc, 1);
+    }
+    //otherwise, add it in
+    else {
+      $scope.filters[type].push(entry);
+    }
   }
 
   $scope.customFilter = function(god){
-		var inPantheon = ($scope.filters.Pantheon.indexOf(god.Pantheon) < 0)
-		var inClass = ($scope.filters.Class.indexOf(god.Class) < 0)
-		var inPType = ($scope.filters.Power_Type.indexOf(god.Power_Type) < 0)
+		var inPantheon = ($scope.filters.Pantheon.indexOf(god.Pantheon) < 0);
+		var inClass = ($scope.filters.Class.indexOf(god.Class) < 0);
+		var inPType = ($scope.filters.Power_Type.indexOf(god.Power_Type) < 0);
 
 		return (inPantheon && inClass && inPType);
 	};
 
-  $scope.fading = false;
-  $scope.appearing = false;
-  $scope.pantheons = ["Japanese", "Norse", "Greek", "Roman", "Chinese", "Hindu", "Mayan"]
-  $scope.godClasses = ["Hunter", "Guardian", "Mage", "Warrior", "Assassin"]
-  $scope.powerTypes = ["Magical", "Physical"]
-
-  $scope.pantheonIsActive = false
-  $scope.powerTypeIsActive = false
-  $scope.classIsActive - false
-
-  $scope.getImage = function(god) {
-    newName = god.Name.replace(/ /g, '')
-    newName = newName.replace("'", "").toLowerCase()
-    return newName.charAt(0).toUpperCase() + newName.slice(1) + ".jpg"
+  $scope.simpleFilter = function(god) {
+    var inPantheon = $scope.isActivePantheon(god.Pantheon);
+    var inClass = $scope.isActiveClass(god.Class);
+    return (inPantheon && inClass);
   }
+
+  $scope.pantheons = ["Egyptian", "Japanese", "Norse", "Greek", "Roman", "Chinese", "Hindu", "Mayan"];
+  $scope.godClasses = ["Hunter", "Guardian", "Mage", "Warrior", "Assassin"];
+  $scope.powerTypes = ["Magical", "Physical"];
+
+  $scope.pantheonIsActive = false;
+  $scope.powerTypeIsActive = false;
+  $scope.classIsActive - false;
 
   $scope.randomize = function() {
-
-    value = Math.floor((Math.random() * $scope.gods.length));
-    while($scope.gods[value] === $scope.chosen) {
-      value = Math.floor((Math.random() * $scope.gods.length));
+    list = $filter('filter')($scope.gods, $scope.simpleFilter);
+    value = Math.floor((Math.random() * list.length));
+    while(list[value] === $scope.chosen) {
+      value = Math.floor((Math.random() * list.length));
     }
-    $scope.chosen = $scope.gods[value];
-  }
+    $scope.chosen = list[value];
+  };
 
   $scope.checkActivated = function() {
     if($scope.pantheonIsActive){
-      return 'activated'
+      return 'activated';
+    }
+  };
+
+  $scope.activePantheon = "All";
+  $scope.activeClass = "All";
+
+  $scope.isActivePantheon = function(pantheon) {
+    if($scope.activePantheon === "All") {
+      return true;
+    } else {
+      return $scope.activePantheon === pantheon;
+    }
+  }
+
+  $scope.isActiveClass = function(godClass) {
+    if($scope.activeClass === "All") {
+      return true;
+    } else {
+      return $scope.activeClass === godClass;
+    }
+  }
+
+  $scope.setActivePantheon = function(pantheon) {
+    $scope.activePantheon = pantheon;
+  }
+
+  $scope.setActiveClass = function(godClass) {
+    $scope.activeClass = godClass;
+  }
+
+  $scope.noGodsToRandomize = function() {
+    list = $filter('filter')($scope.gods, $scope.simpleFilter);
+    if(list.length === 1 && list[0] === $scope.chosen) {
+      $scope.currentError = $scope.oneGodError;
+      return true;
+    } else if(list.length === 0) {
+      $scope.currentError = $scope.noGodsError;
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -337,7 +384,7 @@ $scope.showFilters = false;
       "Subtitle": "King of the Underworld",
       "Attack_Type": "Ranged",
       "Power_Type": "Magical",
-      "Class": "Guardian"
+      "Class": "Mage"
     },
     {
       "Name": "He Bo",
@@ -773,7 +820,33 @@ $scope.showFilters = false;
     }
   ]
 
-  $scope.chosen = $scope.gods[75]
+  $scope.icons = {
+   "Pantheon": {
+     "Hindu": "https://hydra-media.cursecdn.com/smite.gamepedia.com/f/f8/NewUI_Pantheon_Hindu.png?",
+     "Egyptian": "https://hydra-media.cursecdn.com/smite.gamepedia.com/2/27/NewUI_Pantheon_Egyptian.png?",
+     "Japanese": "https://hydra-media.cursecdn.com/smite.gamepedia.com/1/10/NewUI_Pantheon_Japanese.png?",
+     "Norse": "https://hydra-media.cursecdn.com/smite.gamepedia.com/2/2a/NewUI_Pantheon_Norse.png?",
+     "Greek": "https://hydra-media.cursecdn.com/smite.gamepedia.com/7/7f/NewUI_Pantheon_Greek.png?",
+     "Roman": "https://hydra-media.cursecdn.com/smite.gamepedia.com/1/18/NewUI_Pantheon_Roman.png?",
+     "Chinese": "https://hydra-media.cursecdn.com/smite.gamepedia.com/0/0e/NewUI_Pantheon_Chinese.png?",
+     "Mayan": "https://hydra-media.cursecdn.com/smite.gamepedia.com/e/e9/NewUI_Pantheon_Mayan.png?"
+   },
+   "Class": {
+     "Hunter": "https://hydra-media.cursecdn.com/smite.gamepedia.com/a/a2/NewUI_Class_Hunter.png?",
+     "Guardian": "https://hydra-media.cursecdn.com/smite.gamepedia.com/0/03/NewUI_Class_Guardian.png?",
+     "Mage": "https://hydra-media.cursecdn.com/smite.gamepedia.com/0/01/NewUI_Class_Mage.png?",
+     "Assassin": "https://hydra-media.cursecdn.com/smite.gamepedia.com/1/19/NewUI_Class_Assassin.png?",
+     "Warrior": "https://hydra-media.cursecdn.com/smite.gamepedia.com/a/a0/NewUI_Class_Warrior.png?"
+   }
+ }
+
+  $scope.chosen = $scope.gods[75];
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger : 'hover'
+    });
+  })
 
   init();
 }]);

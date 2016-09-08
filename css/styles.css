@@ -22,6 +22,7 @@ hr {
 .god-pic-holder {
   max-width:200px;
   max-height:200px;
+  height: 200px;
   border-radius:50%;
   /*border: 5px solid #78593C;*/
   box-shadow: 0px 0px 20px black;
@@ -51,8 +52,14 @@ hr {
 }
 
 .god-title {
-  margin:-15px;
+  margin-top:-15px;
   font-size: 30px;
+  font-weight: bold;
+}
+
+.god-class-pantheon {
+  margin-top: -20px;
+  font-size: 24px;
 }
 
 #logo {
@@ -68,17 +75,13 @@ img {
   width: auto/9;
 }
 
-#midground {
-  background-color: #FFEE68;
-}
-
 #randomizer {
   width: 100%;
   text-align:center;
 }
 
 .logo-text {
-  font-size: 28px;
+  font-size: 32px;
   text-align:center;
   /*color: #FFEE68;*/
   color: #78593C;
@@ -86,16 +89,52 @@ img {
 
 .background {
   background-color: #78593C;
+  text-align:center;
 }
 
 .foreground {
   background-color: #FDFCF8;
   box-shadow: inset 0px 0px 60px black, 0px 0px 60px black;
-  border-left: 50px solid #FFD34B;
-  border-right: 50px solid #FFD34B;
   min-height: 100vh;
   height: 100%;
   padding-bottom: 50px;
+}
+
+.error-text {
+  font-family: 'Jim Nightshade', cursive;
+  transition: 0.5s linear all;
+  font-size: 28px;
+  color: #78593C;
+}
+
+.error-holder {
+  height: 30px;
+}
+
+.ng-show {
+  opacity: 1;
+}
+
+.ng-hide {
+  opacity: 0;
+}
+
+@media (min-width: 1000px) {
+  .midground {
+    display:inline-block;
+    width: 75%;
+    max-width: 1500px;
+    margin: 0 auto;
+    background-color:#FFD34B;
+    box-shadow: inset 0px 0px 60px black, 0px 0px 60px black;
+  }
+}
+
+@media (max-width: 1000px) {
+  .spacer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }
 
 .holder {
@@ -117,6 +156,14 @@ img {
   border: 2px solid #78593C;
   color: #78593C;
   margin: 5px;
+  transition: 0.5s linear all;
+}
+
+.button:disabled, .button:hover:disabled {
+  border-color: grey;
+  color: grey;
+  box-shadow: 0px 0px 20px black;
+  pointer-events: auto;
 }
 
 .button.small {
@@ -137,18 +184,40 @@ img {
   font-size: 12px;
 }
 
-.filter {
-
+.button.sub-filter.out {
+  box-shadow: 0px 0px 20px green;
 }
 
-.filter.right {
-  text-align:left;
+.button.sub-filter.in {
+  box-shadow: 0px 0px 20px red;
 }
-.filter.middle {
-  text-align:center;
+
+.tooltip-wrapper {
+  display: inline-block;
 }
-.filter.left {
-  text-align:right;
+
+.tooltip-wrapper .disabled {
+  pointer-events: none;
+}
+
+.icon {
+  margin: 5px;
+  max-width: 50px;
+  width: 15%;
+  height: auto;
+  border-radius: 50%;
+  background-color: rgba(100, 0, 0, 0.1);
+  transition: 1s linear all;
+}
+
+.icon.active {
+  opacity: 1;
+}
+
+.icon.inactive {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.5;
 }
 
 .bungee {

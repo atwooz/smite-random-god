@@ -17,9 +17,10 @@
 </head>
 
 <body class="background">
+  <div class="midground">
 <div ng-controller="RandomGodController" class="container foreground">
   <div id="logo">
-    <a href="smitegame.com"><img src="images/smite-logo.png" alt="Smite"></img></a>
+    <a href="http://www.smitegame.com"><img src="images/smite-logo.png" alt="Smite"></img></a>
       <hr>
     <p class="bungee logo-text">Random God Generator</p>
   </div>
@@ -28,13 +29,18 @@
   <div id="randomizer">
     <div class="god">
       <div class="god-pic-holder">
-        <img ng-src="images/updated/{{getImage(chosen)}}" width="200" height="auto"></img>
+        <img class="god-pic" ng-src="{{chosen.Image}}" alt="{{chosen.Name}}" width="200" height="auto"></img>
       </div>
       <p class="god-name">{{chosen.Name}}</p>
       <p class="god-title jimnightshade">{{chosen.Subtitle}}</p>
+      <p class="god-class-pantheon jimnightshade"> {{chosen.Pantheon}} {{chosen.Class}}</p>
     </div>
     <div class="holder">
-      <button ng-click="randomize()" class="button">Randomize</button>
+        <button id="randomizeButton" ng-disabled="noGodsToRandomize()" ng-click="randomize()" class="button">Randomize</button>
+    </div>
+
+    <div class="holder less error-holder">
+      <p class="error-text jimnightshade" ng-show="noGodsToRandomize()">{{currentError}}</p>
     </div>
     <hr>
 
@@ -43,40 +49,35 @@
     </div>
 
     <div class="filter-holder holder less">
-      <button ng-click="showFilters = !showFilters" class="button small">Filters</button>
-      <div class="holder less row" ng-show="showFilters">
-        <div class="col-md-3"></div>
-        <div class="col-md-2 filter left">
-          <button ng-click="pantheonIsActive = !pantheonIsActive" class="button filter">Pantheon</button>
-          <div ng-show="pantheonIsActive" class="filter-group fadeable">
-            <button class="button sub-filter" ng-repeat="pantheon in pantheons.sort()" ng-click="toggleFilter('Pantheon', pantheon)" ng-class="isInFilter('Pantheon', pantheon) ? 'in' : 'out'">{{pantheon}}</button>
+      <button ng-click="activePantheon='All';activeClass='All'" class="button small"
+      data-toggle="tooltip" data-placement="bottom" data-title="Reset All"
+      >Filters</button>
+      <div class="holder less row">
+        <div class="col-md-2 col-lg-2 col-xl-2"></div>
+        <div class="col-sm-12 col-xs-12 col-md-4 col-lg-4 col-xl-4">
+          <button ng-click="activePantheon='All'" class="button sub-filter"
+          data-toggle="tooltip" data-placement="top" data-title="Reset Pantheons"
+          >Pantheon</button>
+          <div class="icon-holder">
+            <img ng-click="setActivePantheon(icon)" class="icon" ng-class="isActivePantheon(icon) ? 'active': 'inactive'" ng-repeat="icon in pantheons.sort()" ng-src="{{icons.Pantheon[icon]}}" alt="{{icon}}" data-toggle="tooltip" data-placement="bottom" title="{{icon}}" ></img>
           </div>
+          <div class="spacer"></div>
         </div>
+        <div class="col-sm-12 col-xs-12 col-md-4 col-lg-4 col-xl-4">
+          <button ng-click="activeClass='All'" class="button sub-filter"
+          data-toggle="tooltip" data-placement="top" data-title="Reset Classes"
+          >Class</button>
+          <div class="icon-holder">
+            <img ng-click="setActiveClass(icon)" class="icon" ng-class="isActiveClass(icon) ? 'active' : 'inactive'" ng-repeat="icon in godClasses.sort()" ng-src="{{icons.Class[icon]}}" alt="{{icon}}" data-toggle="tooltip" data-placement="bottom" title="{{icon}}"></img>
 
-        <div class="col-md-2 filter middle">
-          <button ng-click="powerTypeIsActive = !powerTypeIsActive" class="button filter">Power Type</button>
-          <div ng-show="powerTypeIsActive" class="filter-group fadeable">
-            <button class="button sub-filter"
-            ng-repeat="powerType in powerTypes.sort()"
-            ng-click="toggleFilter('Power_Type', powerType)"
-            ng-class="isInFilter(powerType) ? 'in' : 'out'"
-            >
-              {{powerType}}
-            </button>
           </div>
+          <div class="spacer"></div>
         </div>
-
-        <div class="col-md-2 filter right">
-            <button ng-click="classIsActive = !classIsActive" class="button filter">Class</button>
-            <div ng-show="classIsActive" class="filter-group fadeable">
-              <button class="button sub-filter" ng-repeat="class in godClasses.sort()">{{class}}
-              </button>
-            </div>
-        </div>
-        <div class="col-md-3"></div>
+        <div class="col-md-2 col-lg-2 col-xl-2"></div>
+      </div>
     </div>
-    <div ng-repeat="god in gods | filter:customFilter">{{god.Name}}</div>
   </div>
+</div>
 </div>
 </div>
 </body>
